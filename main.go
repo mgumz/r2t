@@ -32,7 +32,8 @@ func main() {
 		out16 := hex.NewEncoder(out)
 		out = out16
 	case "2":
-		// TODO
+		out2 := newBinEncoder(out)
+		out = out2
 	}
 
 	io.Copy(out, os.Stdin)
@@ -106,4 +107,41 @@ func (w *WrapWriter) Write(p []byte) (int, error) {
 	}
 
 	return total, nil
+}
+
+type binEncoder struct {
+	w  io.Writer
+	b2 [2]byte
+}
+
+func newBinEncoder(w io.Writer) *binEncoder {
+    be := new(binEncoder)
+    be.w = w
+    be.b2 = [2]byte{'0', '1'}
+    return be
+}
+
+func (be *binEncoder) Write(p []byte) (n int, err error) {
+
+	bits := [8]byte{}
+
+	for _, b := range p {
+
+		bits[0] = be.b2[(b & 0x01)>>0]
+		bits[1] = be.b2[(b & 0x02)>>1]
+		bits[2] = be.b2[(b & 0x04)>>2]
+		bits[3] = be.b2[(b & 0x08)>>3]
+		bits[4] = be.b2[(b & 0x10)>>4]
+		bits[5] = be.b2[(b & 0x20)>>5]
+		bits[6] = be.b2[(b & 0x40)>>6]
+		bits[7] = be.b2[(b & 0x80)>>7]
+
+		n2, err2 := be.w.Write(bits[:])
+		n, err = n+n2, err2
+		if err != nil {
+			return
+		}
+	}
+
+	return
 }
