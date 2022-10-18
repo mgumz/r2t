@@ -11,6 +11,23 @@ import (
 
 func main() {
 
+    if len(os.Args) > 1 && os.Args[1] == "-h" {
+        os.Stdout.WriteString(`r2t - convert raw into text
+usage: r2t < in.raw
+
+environment variables:
+
+ENC - encoding
+      b85, 85, a85 - ascii85 encoding
+      b64, 64      - base64 encoding
+      16, hex      - hex encoding
+      2            - binary encoding
+      <unset>      - passthrough
+WRAP - wrap at column c
+`)
+        return
+    }
+
 	var out io.Writer = os.Stdout
 
 	if wrap := os.Getenv("WRAP"); wrap != "" {
