@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/ascii85"
 	"encoding/base64"
-	_ "encoding/hex"
+	"encoding/hex"
 	"io"
 	"os"
 	"strconv"
@@ -29,7 +29,8 @@ func main() {
 		defer out64.Close() // flush remaining parts
 		out = out64
 	case "16", "hex":
-		// TODO
+		out16 := hex.NewEncoder(out)
+		out = out16
 	case "2":
 		// TODO
 	}
