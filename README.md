@@ -15,6 +15,8 @@ implemented options:
 
 * b64, 64: use the base64 encoding
 * b85, 85: use the base85 encoding
+* hex, 16: use hex encoding
+* 2: use binary encoding
 
 
 ### WRAP
@@ -24,14 +26,22 @@ wrapped by a new line.
 
 eg:
 
-    $> env ENC=64 WRAP=40 r2t < infile
+    $> env ENC=64 WRAP=32 r2t < infile
 
-will wrapp the base64 encoded output at column 40.
+will wrapp the base64 encoded output at column 32.
 
+
+## installation
+
+to install *r2t* to ~/go/bin use:
+
+    $> go install -v github.com/mgumz/r2t@latest
 
 ## building
 
-    $> export GOPATH=`pwd`
-    $> go get -v github.com/mgumz/r2t
-    $> cp bin/r2t /usr/local/bin
+build local:
+
+    $> git clone https://github.com/mgumz/r2t
+    $> cd r2t
+    $> go build .
 
