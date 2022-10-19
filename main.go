@@ -32,7 +32,7 @@ WRAP - wrap at column c
 
 	if wrap := os.Getenv("WRAP"); wrap != "" {
 		if wrapColumn, err := strconv.Atoi(wrap); err == nil {
-			out = &WrapWriter{W: out, Column: wrapColumn}
+			out = wrapNewWrap(out, wrapColumn)
 		}
 	}
 
@@ -45,7 +45,7 @@ WRAP - wrap at column c
 		out64 := base64.NewEncoder(base64.StdEncoding, out)
 		defer out64.Close() // flush remaining parts
 		out = out64
-	case "16", "hex":
+	case "16", "b16", "hex":
 		out16 := hex.NewEncoder(out)
 		out = out16
 	case "2":
