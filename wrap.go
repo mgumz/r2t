@@ -7,7 +7,7 @@ import (
 type wrapWriter struct {
 	w   io.Writer
 	col int
-	i  int
+	i   int
 }
 
 func wrapNewWrap(w io.Writer, col int) (ww *wrapWriter) {

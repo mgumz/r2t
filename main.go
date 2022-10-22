@@ -11,32 +11,20 @@ import (
 
 func main() {
 
-    if len(os.Args) > 1 && os.Args[1] == "-h" {
-        os.Stdout.WriteString(`r2t - convert raw into text
-usage: r2t < in.raw
-
-environment variables:
-
-ENC - encoding
-      b85, 85, a85 - ascii85 encoding
-      b64, 64      - base64 encoding
-      16, hex      - hex encoding
-      2            - binary encoding
-      <unset>      - passthrough
-WRAP - wrap at column c
-`)
-        return
-    }
+	if len(os.Args) > 1 && os.Args[1] == "-h" {
+		os.Stdout.WriteString(usage)
+		return
+	}
 
 	var out io.Writer = os.Stdout
 
-	if wrap := os.Getenv("WRAP"); wrap != "" {
-		if wrapColumn, err := strconv.Atoi(wrap); err == nil {
+	if wrap := os.Getenv("R2T_WRAP"); wrap != "" {
+		if wrapColumn, err := strconv.Atoi(wrap); err == nil && wrapColumn > 0 {
 			out = wrapNewWrap(out, wrapColumn)
 		}
 	}
 
-	switch os.Getenv("ENC") {
+	switch os.Getenv("R2T_ENC") {
 	case "85", "b85", "a85":
 		out85 := ascii85.NewEncoder(out)
 		defer out85.Close() // flush remaining parts
@@ -55,4 +43,3 @@ WRAP - wrap at column c
 
 	io.Copy(out, os.Stdin)
 }
-
